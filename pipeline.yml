@@ -1,0 +1,21 @@
+resources:
+- name: floz_training_dockerfile
+  type: git
+  source: 
+    uri: https://github.com/flochaz/concourse_docker_training
+    branch: master
+    paths: [Dockerfile]
+- name: floz_docker_first_build_image
+  type: docker-image
+  source:
+    repository: minusetcortex/training
+    email: {{docker_mail}}
+    username: {{docker_user}}
+    password: {{docker_pass}}
+jobs:
+- name: build_job
+  plan:
+    - get: floz_training_dockerfile
+      trigger: true
+    - put: floz_docker_first_build_image
+      params: {build: floz_training_dockerfile}
